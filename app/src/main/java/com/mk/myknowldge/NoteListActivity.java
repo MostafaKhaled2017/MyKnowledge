@@ -31,6 +31,7 @@ public class NoteListActivity extends AppCompatActivity implements NotesAdapter.
     private int pos;
 
     //TODO : handle that when the app updated all data in it lost
+    //TODO : remove the app from gitHub and add it on BitBucket private
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
