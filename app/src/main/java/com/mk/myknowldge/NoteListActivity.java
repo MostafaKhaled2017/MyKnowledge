@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo;
+package com.mk.myknowldge;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.pavneet_singh.roomdemo.adapter.NotesAdapter;
-import com.example.pavneet_singh.roomdemo.notedb.NoteDatabase;
-import com.example.pavneet_singh.roomdemo.notedb.model.Note;
+import com.mk.myknowldge.adapter.NotesAdapter;
+import com.mk.myknowldge.database.NoteDatabase;
+import com.mk.myknowldge.model.Note;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class NoteListActivity extends AppCompatActivity implements NotesAdapter.
     private NotesAdapter notesAdapter;
     private int pos;
 
-
+    //TODO : handle that when the app updated all data in it lost
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

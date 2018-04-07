@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo.util;
+package com.mk.myknowldge.util;
 
 import android.arch.persistence.room.TypeConverter;
 

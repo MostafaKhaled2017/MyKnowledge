@@ -1,14 +1,16 @@
-package com.example.pavneet_singh.roomdemo.notedb.model;
+package com.mk.myknowldge.model;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-import com.example.pavneet_singh.roomdemo.util.Constants;
+
+import com.mk.myknowldge.util.Constants;
 
 import java.io.Serializable;
 import java.util.Date;
+
 
 /**
  * Created by Pavneet_Singh on 12/30/17.

@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo.adapter;
+package com.mk.myknowldge.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,8 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.pavneet_singh.roomdemo.R;
-import com.example.pavneet_singh.roomdemo.notedb.model.Note;
+
+import com.mk.myknowldge.R;
+import com.mk.myknowldge.model.Note;
 
 import java.util.List;
 

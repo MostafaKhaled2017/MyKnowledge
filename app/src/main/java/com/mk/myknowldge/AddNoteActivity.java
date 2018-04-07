@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo;
+package com.mk.myknowldge;
 
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,9 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.pavneet_singh.roomdemo.adapter.NotesAdapter;
-import com.example.pavneet_singh.roomdemo.notedb.NoteDatabase;
-import com.example.pavneet_singh.roomdemo.notedb.model.Note;
+import com.mk.myknowldge.database.NoteDatabase;
+import com.mk.myknowldge.model.Note;
 
 import java.lang.ref.WeakReference;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo.notedb.dao;
+package com.mk.myknowldge.dao;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -6,8 +6,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import com.example.pavneet_singh.roomdemo.notedb.model.Note;
-import com.example.pavneet_singh.roomdemo.util.Constants;
+import com.mk.myknowldge.util.Constants;
+import com.mk.myknowldge.model.Note;
 
 import java.util.List;
 

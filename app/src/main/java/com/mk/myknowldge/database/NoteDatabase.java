@@ -1,4 +1,4 @@
-package com.example.pavneet_singh.roomdemo.notedb;
+package com.mk.myknowldge.database;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -6,10 +6,10 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 
-import com.example.pavneet_singh.roomdemo.notedb.dao.NoteDao;
-import com.example.pavneet_singh.roomdemo.notedb.model.Note;
-import com.example.pavneet_singh.roomdemo.util.Constants;
-import com.example.pavneet_singh.roomdemo.util.DateRoomConverter;
+import com.mk.myknowldge.util.Constants;
+import com.mk.myknowldge.util.DateRoomConverter;
+import com.mk.myknowldge.dao.NoteDao;
+import com.mk.myknowldge.model.Note;
 
 /**
  * Created by Pavneet_Singh on 12/31/17.
