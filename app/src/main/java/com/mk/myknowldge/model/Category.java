@@ -16,7 +16,6 @@ public class Category {
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + COLUMN_NAME + " TEXT,"
-                    + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
                     + ")";
 
     public Category() {
@@ -31,11 +30,11 @@ public class Category {
         return id;
     }
 
-    public String getcName() {
+    public String getName() {
         return cName;
     }
 
-    public void setcName(String cName) {
+    public void setName(String cName) {
         this.cName = cName;
     }
 

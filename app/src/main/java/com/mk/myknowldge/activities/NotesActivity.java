@@ -1,7 +1,6 @@
 package com.mk.myknowldge.activities;
 
 import android.content.DialogInterface;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -22,7 +20,6 @@ import android.widget.Toast;
 import com.mk.myknowldge.R;
 import com.mk.myknowldge.adapter.NotesAdapter;
 import com.mk.myknowldge.helpers.DatabaseHelper;
-import com.mk.myknowldge.model.Category;
 import com.mk.myknowldge.model.Note;
 import com.mk.myknowldge.utils.MyDividerItemDecoration;
 import com.mk.myknowldge.utils.RecyclerTouchListener;
@@ -50,7 +47,7 @@ public class NotesActivity extends AppCompatActivity {
 
         coordinatorLayout = findViewById(R.id.coordinator_layout);
         recyclerView = findViewById(R.id.recycler_view);
-        noNotesView = findViewById(R.id.empty_notes_view);
+        noNotesView = findViewById(R.id.empty_view);
 
         db = new DatabaseHelper(this);
 
@@ -92,19 +89,19 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     /**
-     * Inserting new note in db
+     * Inserting new name in db
      * and refreshing the list
      */
     private void createNote(String note) {
-        // inserting note in db and getting
-        // newly inserted note id
+        // inserting name in db and getting
+        // newly inserted name id
         long id = db.insertNote(note);
 
-        // get the newly inserted note from db
+        // get the newly inserted name from db
         Note n = db.getNote(id);
 
         if (n != null) {
-            // adding new note to array list at 0 position
+            // adding new name to array list at 0 position
             notesList.add(0, n);
 
             // refreshing the list
@@ -115,15 +112,15 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     /**
-     * Updating note in db and updating
+     * Updating name in db and updating
      * item in the list by its position
      */
     private void updateNote(String note, int position) {
         Note n = notesList.get(position);
-        // updating note text
+        // updating name text
         n.setNote(note);
 
-        // updating note in db
+        // updating name in db
         db.updateNote(n);
 
         // refreshing the list
@@ -134,14 +131,14 @@ public class NotesActivity extends AppCompatActivity {
     }
 
     /**
-     * Deleting note from SQLite and removing the
+     * Deleting name from SQLite and removing the
      * item from the list by its position
      */
     private void deleteNote(int position) {
-        // deleting the note from db
+        // deleting the name from db
         db.deleteNote(notesList.get(position));
 
-        // removing the note from the list
+        // removing the name from the list
         notesList.remove(position);
         mAdapter.notifyItemRemoved(position);
 
@@ -173,18 +170,18 @@ public class NotesActivity extends AppCompatActivity {
 
     /**
      * Shows alert dialog with EditText options to enter / edit
-     * a note.
-     * when shouldUpdate=true, it automatically displays old note and changes the
+     * a name.
+     * when shouldUpdate=true, it automatically displays old name and changes the
      * button text to UPDATE
      */
     private void showNoteDialog(final boolean shouldUpdate, final Note note, final int position) {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
-        View view = layoutInflaterAndroid.inflate(R.layout.note_dialog, null);
+        View view = layoutInflaterAndroid.inflate(R.layout.dialog, null);
 
         AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(NotesActivity.this);
         alertDialogBuilderUserInput.setView(view);
 
-        final EditText inputNote = view.findViewById(R.id.note);
+        final EditText inputNote = view.findViewById(R.id.dialog_value);
         TextView dialogTitle = view.findViewById(R.id.dialog_title);
         dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_note_title) : getString(R.string.lbl_edit_note_title));
 
@@ -213,18 +210,18 @@ public class NotesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Show toast message when no text is entered
                 if (TextUtils.isEmpty(inputNote.getText().toString())) {
-                    Toast.makeText(NotesActivity.this, "Enter note!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NotesActivity.this, "Enter name!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     alertDialog.dismiss();
                 }
 
-                // check if user updating note
+                // check if user updating name
                 if (shouldUpdate && note != null) {
-                    // update note by it's id
+                    // update name by it's id
                     updateNote(inputNote.getText().toString(), position);
                 } else {
-                    // create new note
+                    // create new name
                     createNote(inputNote.getText().toString());
                 }
             }

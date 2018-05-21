@@ -30,7 +30,7 @@ public interface NoteDao {
 
     /*
     * update the object in database
-    * @param note, object to be updated
+    * @param name, object to be updated
     */
     @Update
     void updateNote(Category repos);

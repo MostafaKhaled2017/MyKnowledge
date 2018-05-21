@@ -19,7 +19,7 @@
 //
 //    private TextInputEditText et_title,et_content;
 //    private Database database;
-//    private Category note;
+//    private Category name;
 //    private boolean update;
 //
 //    @Override
@@ -30,51 +30,51 @@
 //        et_content = findViewById(R.id.et_content);
 //        database = Database.getInstance(AddNoteActivity.this);
 //        Button button = findViewById(R.id.but_save);
-//        if ( (note = (Category) getIntent().getSerializableExtra("note"))!=null ){
+//        if ( (name = (Category) getIntent().getSerializableExtra("name"))!=null ){
 //            getSupportActionBar().setTitle("Update Category");
 //            update = true;
 //            button.setText("Update");
-//            et_title.setText(note.getTitle());
-//            et_content.setText(note.getContent());
+//            et_title.setText(name.getTitle());
+//            et_content.setText(name.getContent());
 //        }
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
 //                if (update){
-//                    note.setContent(et_content.getText().toString());
-//                    note.setTitle(et_title.getText().toString());
-//                    database.getNoteDao().updateNote(note);
-//                    setResult(note,2);
+//                    name.setContent(et_content.getText().toString());
+//                    name.setTitle(et_title.getText().toString());
+//                    database.getNoteDao().updateNote(name);
+//                    setResult(name,2);
 //                }else {
-//                    note = new Category(et_content.getText().toString(), et_title.getText().toString());
-//                    new InsertTask(AddNoteActivity.this,note).execute();
+//                    name = new Category(et_content.getText().toString(), et_title.getText().toString());
+//                    new InsertTask(AddNoteActivity.this,name).execute();
 //                }
 //            }
 //        });
 //    }
 //
-//    private void setResult(Category note, int flag){
-//        setResult(flag,new Intent().putExtra("note",note));
+//    private void setResult(Category name, int flag){
+//        setResult(flag,new Intent().putExtra("name",name));
 //        finish();
 //    }
 //
 //    private static class InsertTask extends AsyncTask<Void,Void,Boolean> {
 //
 //        private WeakReference<AddNoteActivity> activityReference;
-//        private Category note;
+//        private Category name;
 //
 //        // only retain a weak reference to the activity
-//        InsertTask(AddNoteActivity context, Category note) {
+//        InsertTask(AddNoteActivity context, Category name) {
 //            activityReference = new WeakReference<>(context);
-//            this.note = note;
+//            this.name = name;
 //        }
 //
 //        // doInBackground methods runs on a worker thread
 //        @Override
 //        protected Boolean doInBackground(Void... objs) {
-//            // retrieve auto incremented note id
-//            long j = activityReference.get().database.getNoteDao().insertNote(note);
-//            note.setNote_id(j);
+//            // retrieve auto incremented name id
+//            long j = activityReference.get().database.getNoteDao().insertNote(name);
+//            name.setNote_id(j);
 //            Log.e("ID ", "doInBackground: "+j );
 //            return true;
 //        }
@@ -83,7 +83,7 @@
 //        @Override
 //        protected void onPostExecute(Boolean bool) {
 //            if (bool){
-//                activityReference.get().setResult(note,1);
+//                activityReference.get().setResult(name,1);
 //                activityReference.get().finish();
 //            }
 //        }

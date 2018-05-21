@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 
 import com.mk.myknowldge.R;
-import com.mk.myknowldge.model.Category;
 import com.mk.myknowldge.model.Note;
 
 import java.text.ParseException;
@@ -31,7 +30,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
 
         public MyViewHolder(View view) {
             super(view);
-            note = view.findViewById(R.id.note);
+            note = view.findViewById(R.id.dialog_value);
             dot = view.findViewById(R.id.dot);
             timestamp = view.findViewById(R.id.timestamp);
         }

@@ -1,151 +1,261 @@
-//package com.mk.myknowldge;
-//
-//import android.content.DialogInterface;
-//import android.content.Intent;
-//import android.os.AsyncTask;
-//import android.os.Bundle;
-//import android.support.design.widget.FloatingActionButton;
-//import android.support.v7.app.AlertDialog;
-//import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.widget.LinearLayoutManager;
-//import android.support.v7.widget.RecyclerView;
-//import android.support.v7.widget.Toolbar;
-//import android.view.View;
-//import android.widget.TextView;
-//
-//import com.mk.myknowldge.adapter.NotesAdapter;
-//import com.mk.myknowldge.database.NoteDatabase;
-//import com.mk.myknowldge.model.Note;
-//
-//import java.lang.ref.WeakReference;
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//public class NoteListActivity extends AppCompatActivity implements NotesAdapter.OnNoteItemClick{
-//
-//    private TextView textViewMsg;
-//    private RecyclerView recyclerView;
-//    private NoteDatabase noteDatabase;
-//    private List<Note> notes;
-//    private NotesAdapter notesAdapter;
-//    private int pos;
-//
-//    //TODO : handle that when the app updated all data in it lost
-//    //TODO : remove the app from gitHub and add it on BitBucket private
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        initializeVies();
-//        displayList();
-//    }
-//
-//    private void displayList(){
-//        noteDatabase = NoteDatabase.getInstance(NoteListActivity.this);
-//        new RetrieveTask(this).execute();
-//    }
-//
-//     private static class RetrieveTask extends AsyncTask<Void,Void,List<Note>>{
-//
-//        private WeakReference<NoteListActivity> activityReference;
-//
-//        // only retain a weak reference to the activity
-//        RetrieveTask(NoteListActivity context) {
-//            activityReference = new WeakReference<>(context);
-//        }
-//
-//        @Override
-//        protected List<Note> doInBackground(Void... voids) {
-//            if (activityReference.get()!=null)
-//                return activityReference.get().noteDatabase.getNoteDao().getNotes();
-//            else
-//                return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<Note> notes) {
-//            if (notes!=null && notes.size()>0 ){
-//                activityReference.get().notes.clear();
-//                activityReference.get().notes.addAll(notes);
-//                // hides empty text view
-//                activityReference.get().textViewMsg.setVisibility(View.GONE);
-//                activityReference.get().notesAdapter.notifyDataSetChanged();
-//            }
-//        }
-//    }
-//
-//    private void initializeVies(){
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        textViewMsg =  (TextView) findViewById(R.id.tv__empty);
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(listener);
-//        recyclerView = findViewById(R.id.recycler_view);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(NoteListActivity.this));
-//        notes = new ArrayList<>();
-//        notesAdapter = new NotesAdapter(notes,NoteListActivity.this);
-//        recyclerView.setAdapter(notesAdapter);
-//    }
-//
-//    private View.OnClickListener listener = new View.OnClickListener() {
-//        @Override
-//        public void onClick(View view) {
-//            startActivityForResult(new Intent(NoteListActivity.this,AddNoteActivity.class),100);
-//        }
-//    };
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == 100 && resultCode > 0 ){
-//            if( resultCode == 1){
-//                notes.add((Note) data.getSerializableExtra("note"));
-//            }else if( resultCode == 2){
-//                notes.set(pos,(Note) data.getSerializableExtra("note"));
-//            }
-//            listVisibility();
-//        }
-//    }
-//
-//    @Override
-//    public void onNoteClick(final int pos) {
-//            new AlertDialog.Builder(NoteListActivity.this)
-//            .setTitle("Select Options")
-//            .setItems(new String[]{"Delete", "Update"}, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialogInterface, int i) {
-//                    switch (i){
-//                        case 0:
-//                            noteDatabase.getNoteDao().deleteNote(notes.get(pos));
-//                            notes.remove(pos);
-//                            listVisibility();
-//                            break;
-//                        case 1:
-//                            NoteListActivity.this.pos = pos;
-//                            startActivityForResult(
-//                                    new Intent(NoteListActivity.this,
-//                                            AddNoteActivity.class).putExtra("note",notes.get(pos)),
-//                                    100);
-//
-//                            break;
-//                    }
-//                }
-//            }).show();
-//
-//    }
-//
-//    private void listVisibility(){
-//        int emptyMsgVisibility = View.GONE;
-//        if (notes.size() == 0){ // no item to display
-//            if (textViewMsg.getVisibility() == View.GONE)
-//                emptyMsgVisibility = View.VISIBLE;
-//        }
-//        textViewMsg.setVisibility(emptyMsgVisibility);
-//        notesAdapter.notifyDataSetChanged();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        noteDatabase.cleanUp();
-//        super.onDestroy();
-//    }
-//}
+package com.mk.myknowldge.activities;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mk.myknowldge.R;
+import com.mk.myknowldge.adapter.CategoriesAdapter;
+import com.mk.myknowldge.helpers.DatabaseHelper;
+import com.mk.myknowldge.model.Category;
+import com.mk.myknowldge.utils.MyDividerItemDecoration;
+import com.mk.myknowldge.utils.RecyclerTouchListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class MainCategoriesActivity extends AppCompatActivity {
+    private CategoriesAdapter mAdapter;
+    private List<Category> categoriesList = new ArrayList<>();
+    private CoordinatorLayout coordinatorLayout;
+    private RecyclerView recyclerView;
+    private TextView noThingView;
+
+    private DatabaseHelper db;
+
+    //TODO : add the project to bitBucket as private
+    //TODO : enhance the design of the app
+    //TODO : revise all the yellow and other marks
+    //TODO : find a way to handle database lost and find a way to make a backup to it
+    //TODO : optimize code as possible multiple times
+    //TODO : add welcome screen with the app name and icon
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        toolbarTitle.setText("Main Categories");
+
+        coordinatorLayout = findViewById(R.id.coordinator_layout);
+        recyclerView = findViewById(R.id.recycler_view);
+        noThingView = findViewById(R.id.empty_view);
+
+        db = new DatabaseHelper(this);
+
+        categoriesList.addAll(db.getAllCategories());
+
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCategoryDialog(false, null, -1);
+            }
+        });
+
+        mAdapter = new CategoriesAdapter(this, categoriesList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
+        recyclerView.setAdapter(mAdapter);
+
+        if(categoriesList.isEmpty()){
+            long bookdId = db.insertCategory("Books");
+            long coursesId = db.insertCategory("Courses");
+            long lifeId = db.insertCategory("Life");
+            long othersId = db.insertCategory("Others");
+            categoriesList.add(0, db.getCategory(bookdId));
+            categoriesList.add(0, db.getCategory(coursesId));
+            categoriesList.add(0, db.getCategory(lifeId));
+            categoriesList.add(0, db.getCategory(othersId));
+
+        }
+
+        toggleEmptyCategories();
+
+        /**
+         * On long press on RecyclerView item, open alert dialog
+         * with options to choose
+         * Edit and Delete
+         * */
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
+                recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, final int position) {
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                showActionsDialog(position);
+            }
+        }));
+    }
+
+    /**
+     * Inserting new name in db
+     * and refreshing the list
+     */
+    private void createCategory(String category) {
+        // inserting name in db and getting
+        // newly inserted name id
+        long id = db.insertCategory(category);
+
+        // get the newly inserted name from db
+        Category n = db.getCategory(id);
+
+        if (n != null) {
+            // adding new name to array list at 0 position
+            categoriesList.add(0, n);
+
+            // refreshing the list
+            mAdapter.notifyDataSetChanged();
+
+            toggleEmptyCategories();
+        }
+    }
+
+    /**
+     * Updating name in db and updating
+     * item in the list by its position
+     */
+    private void updateCategory(String category, int position) {
+        Category n = categoriesList.get(position);
+        // updating name text
+        n.setName(category);
+
+        // updating name in db
+        db.updateCategory(n);
+
+        // refreshing the list
+        categoriesList.set(position, n);
+        mAdapter.notifyItemChanged(position);
+
+        toggleEmptyCategories();
+    }
+
+    /**
+     * Deleting name from SQLite and removing the
+     * item from the list by its position
+     */
+    private void deleteCategory(int position) {
+        // deleting the name from db
+        db.deleteCategory(categoriesList.get(position));
+
+        // removing the name from the list
+        categoriesList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+
+        toggleEmptyCategories();
+    }
+
+    /**
+     * Opens dialog with Edit - Delete options
+     * Edit - 0
+     * Delete - 0
+     */
+    private void showActionsDialog(final int position) {
+        CharSequence colors[] = new CharSequence[]{"Edit", "Delete"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose option");
+        builder.setItems(colors, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    showCategoryDialog(true, categoriesList.get(position), position);
+                } else {
+                    deleteCategory(position);
+                }
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Shows alert dialog with EditText options to enter / edit
+     * a name.
+     * when shouldUpdate=true, it automatically displays old name and changes the
+     * button text to UPDATE
+     */
+    private void showCategoryDialog(final boolean shouldUpdate, final Category category, final int position) {
+        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
+        View view = layoutInflaterAndroid.inflate(R.layout.dialog, null);
+
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(MainCategoriesActivity.this);
+        alertDialogBuilderUserInput.setView(view);
+
+        final EditText inputCategory = view.findViewById(R.id.dialog_value);
+        TextView dialogTitle = view.findViewById(R.id.dialog_title);
+        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_category_title) : getString(R.string.lbl_edit_category_title));
+
+        if (shouldUpdate && category != null) {
+            inputCategory.setText(category.getName());
+        }
+        alertDialogBuilderUserInput
+                .setCancelable(false)
+                .setPositiveButton(shouldUpdate ? "update" : "save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialogBox, int id) {
+
+                    }
+                })
+                .setNegativeButton("cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogBox, int id) {
+                                dialogBox.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
+        alertDialog.show();
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show toast message when no text is entered
+                if (TextUtils.isEmpty(inputCategory.getText().toString())) {
+                    Toast.makeText(MainCategoriesActivity.this, "Enter name!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    alertDialog.dismiss();
+                }
+
+                // check if user updating name
+                if (shouldUpdate && category != null) {
+                    // update name by it's id
+                    updateCategory(inputCategory.getText().toString(), position);
+                } else {
+                    // create new name
+                    createCategory(inputCategory.getText().toString());
+                }
+            }
+        });
+    }
+
+    /**
+     * Toggling list and empty categories view
+     */
+    private void toggleEmptyCategories() {
+        // you can check categoriesList.size() > 0
+
+        if (db.getCategoriesCount() > 0) {
+            noThingView.setVisibility(View.GONE);
+        } else {
+            noThingView.setVisibility(View.VISIBLE);
+        }
+    }
+}
