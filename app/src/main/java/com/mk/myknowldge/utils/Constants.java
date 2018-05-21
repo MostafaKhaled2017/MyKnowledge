@@ -1,4 +1,4 @@
-package com.mk.myknowldge.util;
+package com.mk.myknowldge.utils;
 
 /**
  * Created by Pavneet_Singh on 12/31/17.

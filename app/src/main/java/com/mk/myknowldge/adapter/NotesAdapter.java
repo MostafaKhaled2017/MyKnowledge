@@ -1,82 +1,89 @@
 package com.mk.myknowldge.adapter;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.mk.myknowldge.R;
+import com.mk.myknowldge.model.Category;
 import com.mk.myknowldge.model.Note;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Pavneet_Singh on 12/20/17.
- */
 
-public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.BeanHolder> {
+public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder> {
 
-    private List<Note> list;
     private Context context;
-    private LayoutInflater layoutInflater;
-    private OnNoteItemClick onNoteItemClick;
+    private List<Note> notesList;
 
-    public NotesAdapter(List<Note> list,Context context) {
-        layoutInflater = LayoutInflater.from(context);
-        this.list = list;
-        this.context = context;
-        this.onNoteItemClick = (OnNoteItemClick) context;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        public TextView note;
+        public TextView dot;
+        public TextView timestamp;
+
+        public MyViewHolder(View view) {
+            super(view);
+            note = view.findViewById(R.id.note);
+            dot = view.findViewById(R.id.dot);
+            timestamp = view.findViewById(R.id.timestamp);
+        }
     }
 
 
-        @Override
-    public BeanHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = layoutInflater.inflate(R.layout.note_list_item,parent,false);
-        return new BeanHolder(view);
+    public NotesAdapter(Context context, List<Note> notesList) {
+        this.context = context;
+        this.notesList = notesList;
     }
 
     @Override
-    public void onBindViewHolder(BeanHolder holder, int position) {
-        Log.e("bind", "onBindViewHolder: "+ list.get(position));
-        holder.textViewTitle.setText(list.get(position).getTitle());
-        holder.textViewContent.setText(list.get(position).getContent());
+    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.note_list_row, parent, false);
+
+        return new MyViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position) {
+        Note note = notesList.get(position);
+
+        holder.note.setText(note.getNote());
+
+        // Displaying dot from HTML character code
+        holder.dot.setText(Html.fromHtml("&#8226;"));
+
+        // Formatting and displaying timestamp
+        holder.timestamp.setText(formatDate(note.getTimestamp()));
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return notesList.size();
     }
 
-    public class BeanHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    /**
+     * Formatting timestamp to `MMM d` format
+     * Input: 2018-02-21 00:15:42
+     * Output: Feb 21
+     */
+    private String formatDate(String dateStr) {
+        try {
+            SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = fmt.parse(dateStr);
+            SimpleDateFormat fmtOut = new SimpleDateFormat("MMM d");
+            return fmtOut.format(date);
+        } catch (ParseException e) {
 
-        TextView textViewContent;
-        TextView textViewTitle;
-        public BeanHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-            textViewContent = itemView.findViewById(R.id.item_text);
-            textViewTitle = itemView.findViewById(R.id.tv_title);
         }
 
-        @Override
-        public void onClick(View view) {
-            onNoteItemClick.onNoteClick(getAdapterPosition());
-        }
-    }
-
-    public interface OnNoteItemClick{
-        void onNoteClick(int pos);
+        return "";
     }
 }

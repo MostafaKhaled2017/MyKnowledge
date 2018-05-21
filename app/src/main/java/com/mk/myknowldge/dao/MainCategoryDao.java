@@ -16,38 +16,38 @@ import java.util.List;
  */
 
 @Dao
-public interface NoteDao {
+public interface MainCategoryDao {
 
-    @Query("SELECT * FROM "+ Constants.TABLE_NAME_NOTE)
-    List<Category> getNotes();
+    @Query("SELECT * FROM "+ Constants.TABLE_NAME_MAIN_CATEGORIES)
+    List<Category> getMainCategories();
 
     /*
     * Insert the object in database
-    * @param category, object to be inserted
+    * @param Category, object to be inserted
     */
     @Insert
-    long insertNote(Category category);
+    long insertMainCategory(Category Category);
 
     /*
     * update the object in database
-    * @param note, object to be updated
+    * @param Category, object to be updated
     */
     @Update
-    void updateNote(Category repos);
+    void updateMainCategory(Category repos);
 
     /*
     * delete the object from database
-    * @param category, object to be deleted
+    * @param Category, object to be deleted
     */
     @Delete
-    void deleteNote(Category category);
+    void deleteMainCategory(Category Category);
 
-    // Category... is varargs, here category is an array
+    // Category... is varargs, here Category is an array
     /*
     * delete list of objects from database
-    * @param category, array of oject to be deleted
+    * @param Category, array of oject to be deleted
     */
     @Delete
-    void deleteNotes(Category... category);
+    void deleteMainCategories(Category... Category);
 
 }

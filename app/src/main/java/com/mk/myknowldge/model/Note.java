@@ -1,109 +1,55 @@
 package com.mk.myknowldge.model;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
+public class Note {
+    public static final String TABLE_NAME = "notes";
+
+    public static final String COLUMN_ID = "id";
+    public static final String COLUMN_NOTE = "note";
+    public static final String COLUMN_TIMESTAMP = "timestamp";
+
+    private int id;
+    private String note;
+    private String timestamp;
 
 
-import com.mk.myknowldge.util.Constants;
+    // Create table SQL query
+    public static final String CREATE_TABLE =
+            "CREATE TABLE " + TABLE_NAME + "("
+                    + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                    + COLUMN_NOTE + " TEXT,"
+                    + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP"
+                    + ")";
 
-import java.io.Serializable;
-import java.util.Date;
-
-
-/**
- * Created by Pavneet_Singh on 12/30/17.
- */
-
-@Entity(tableName = Constants.TABLE_NAME_NOTE)
-public class Note implements Serializable{
-
-    @PrimaryKey(autoGenerate = true)
-    private long note_id;
-
-    @ColumnInfo(name = "note_content") // column name will be "note_content" instead of "content" in table
-    private String content;
-
-    private String title;
-
-    private Date date;
-
-//    public Note(int note_id, String content, String title, Date date) {
-//        this.note_id = note_id;
-//        this.content = content;
-//        this.title = title;
-//        this.date = date;
-//    }
-
-    public Note(String content, String title) {
-        this.content = content;
-        this.title = title;
-        this.date = new Date(System.currentTimeMillis());
+    public Note() {
     }
 
-    @Ignore
-    public Note(){}
-
-    public Date getDate() {
-        return date;
+    public Note(int id, String note, String timestamp) {
+        this.id = id;
+        this.note = note;
+        this.timestamp = timestamp;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public int getId() {
+        return id;
     }
 
-    public long getNote_id() {
-        return note_id;
+    public String getNote() {
+        return note;
     }
 
-    public void setNote_id(long note_id) {
-        this.note_id = note_id;
+    public void setNote(String note) {
+        this.note = note;
     }
 
-    public String getContent() {
-        return content;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Note)) return false;
-
-        Note note = (Note) o;
-
-        if (note_id != note.note_id) return false;
-        return title != null ? title.equals(note.title) : note.title == null;
-    }
-
-
-
-    @Override
-    public int hashCode() {
-        int result = (int)note_id;
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Note{" +
-                "note_id=" + note_id +
-                ", content='" + content + '\'' +
-                ", title='" + title + '\'' +
-                ", date=" + date +
-                '}';
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }
