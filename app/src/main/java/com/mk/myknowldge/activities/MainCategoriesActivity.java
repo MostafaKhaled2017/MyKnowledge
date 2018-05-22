@@ -207,7 +207,7 @@ public class MainCategoriesActivity extends AppCompatActivity {
             inputCategory.setText(category.getName());
         }
         alertDialogBuilderUserInput
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton(shouldUpdate ? "update" : "save", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogBox, int id) {
 

@@ -115,7 +115,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Category.TABLE_NAME,
-                new String[]{Category.COLUMN_ID, Category.COLUMN_NAME, Category.COLUMN_TIMESTAMP},
+                new String[]{Category.COLUMN_ID, Category.COLUMN_NAME},
                 Category.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -168,7 +168,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Category.TABLE_NAME + " ORDER BY " +
-                Category.COLUMN_NAME + " ASC";
+                Category.COLUMN_NAME;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
