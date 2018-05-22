@@ -37,7 +37,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
 
-    //TODO : add the project to bitBucket as private
+    //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app
     //TODO : revise all the yellow and other marks
     //TODO : find a way to handle database lost and find a way to make a backup to it
