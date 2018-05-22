@@ -261,5 +261,4 @@ public class CategoriesActivity extends AppCompatActivity {
             noThingView.setVisibility(View.VISIBLE);
         }
     }
-    //test
-}
+    }
