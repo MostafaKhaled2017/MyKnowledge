@@ -27,7 +27,7 @@ import com.mk.myknowldge.utils.RecyclerTouchListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainCategoriesActivity extends AppCompatActivity {
+public class CategoriesActivity extends AppCompatActivity {
     private CategoriesAdapter mAdapter;
     private List<Category> categoriesList = new ArrayList<>();
     private CoordinatorLayout coordinatorLayout;
@@ -42,6 +42,7 @@ public class MainCategoriesActivity extends AppCompatActivity {
     //TODO : find a way to handle database lost and find a way to make a backup to it
     //TODO : optimize code as possible multiple times
     //TODO : add welcome screen with the app name and icon
+    //TODO : make when new element added it presents in its place according to the sort type
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,7 +197,7 @@ public class MainCategoriesActivity extends AppCompatActivity {
         LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
         View view = layoutInflaterAndroid.inflate(R.layout.dialog, null);
 
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(MainCategoriesActivity.this);
+        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(CategoriesActivity.this);
         alertDialogBuilderUserInput.setView(view);
 
         final EditText inputCategory = view.findViewById(R.id.dialog_value);
@@ -228,7 +229,7 @@ public class MainCategoriesActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Show toast message when no text is entered
                 if (TextUtils.isEmpty(inputCategory.getText().toString())) {
-                    Toast.makeText(MainCategoriesActivity.this, "Enter name!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CategoriesActivity.this, "Enter name!", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     alertDialog.dismiss();

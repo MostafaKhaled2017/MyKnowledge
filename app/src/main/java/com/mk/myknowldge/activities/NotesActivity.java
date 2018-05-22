@@ -1,6 +1,7 @@
 package com.mk.myknowldge.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -33,6 +34,7 @@ public class NotesActivity extends AppCompatActivity {
     private CoordinatorLayout coordinatorLayout;
     private RecyclerView recyclerView;
     private TextView noNotesView;
+    private static String categoryName="My Knowledge";
 
     private DatabaseHelper db;
 
@@ -42,14 +44,20 @@ public class NotesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Intent intent = getIntent();
+        if(intent != null)
+            categoryName = intent.getStringExtra("category_name");
+        TextView toolbarTitle = findViewById(R.id.toolbar_title);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbarTitle.setText(categoryName);
 
         coordinatorLayout = findViewById(R.id.coordinator_layout);
         recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_view);
 
         db = new DatabaseHelper(this);
+        db.setCategoryName(categoryName);
 
         notesList.addAll(db.getAllNotes());
 
@@ -95,7 +103,7 @@ public class NotesActivity extends AppCompatActivity {
     private void createNote(String note) {
         // inserting name in db and getting
         // newly inserted name id
-        long id = db.insertNote(note);
+        long id = db.insertNote(note, categoryName);
 
         // get the newly inserted name from db
         Note n = db.getNote(id);
@@ -239,5 +247,9 @@ public class NotesActivity extends AppCompatActivity {
         } else {
             noNotesView.setVisibility(View.VISIBLE);
         }
+    }
+
+    public String getCategoryName() {
+        return categoryName;
     }
 }

@@ -1,6 +1,7 @@
 package com.mk.myknowldge.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 
 
 import com.mk.myknowldge.R;
+import com.mk.myknowldge.activities.NotesActivity;
+import com.mk.myknowldge.helpers.DatabaseHelper;
 import com.mk.myknowldge.model.Category;
 
 import java.text.ParseException;
@@ -30,7 +33,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
         public MyViewHolder(View view) {
             super(view);
-            name = view.findViewById(R.id.dialog_value);
+            name = view.findViewById(R.id.category_name);
             dot = view.findViewById(R.id.dot);
             timestamp = view.findViewById(R.id.timestamp);
         }
@@ -52,12 +55,21 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Category category = categoriesList.get(position);
+        final Category category = categoriesList.get(position);
+//TODO : remove final ?
+        // Displaying dot from HTML character code
+        holder.dot.setText(Html.fromHtml("&#8226;"));
 
         holder.name.setText(category.getName());
 
-        // Displaying dot from HTML character code
-        holder.dot.setText(Html.fromHtml("&#8226;"));
+        holder.name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(context, NotesActivity.class);
+                i.putExtra("category_name",category.getName());
+                context.startActivity(i);
+            }
+        });
 
     }
 

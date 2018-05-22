@@ -3,9 +3,9 @@ package com.mk.myknowldge.model;
 public class Category {
     public static final String TABLE_NAME = "category";
 
-    public static final String COLUMN_ID = "id";
-    public static final String COLUMN_NAME = "cName";
-    public static final String COLUMN_TIMESTAMP = "timestamp";
+    public static final String COLUMN_ID = "ID";
+    public static final String COLUMN_NAME = "CategoryName";
+    public static final String COLUMN_TIMESTAMP = "Timestamp";
 
     private int id;
     private String cName;

@@ -14,7 +14,7 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:name=".activities.NotesActivity"/>
 
-        <activity android:name=".activities.MainCategoriesActivity" >
+        <activity android:name=".activities.CategoriesActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

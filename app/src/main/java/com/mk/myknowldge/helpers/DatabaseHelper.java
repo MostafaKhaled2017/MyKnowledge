@@ -2,10 +2,12 @@ package com.mk.myknowldge.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.mk.myknowldge.activities.NotesActivity;
 import com.mk.myknowldge.model.Category;
 import com.mk.myknowldge.model.Note;
 
@@ -21,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "notes_db";
 
+    String categoryName;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -48,7 +51,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertNote(String note) {
+    public long insertNote(String note, String categoryName) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -56,7 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
         values.put(Note.COLUMN_NOTE, note);
-
+        values.put(Note.CATEGORY_NAME, categoryName);
         // insert row
         long id = db.insert(Note.TABLE_NAME, null, values);
 
@@ -91,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Note.TABLE_NAME,
-                new String[]{Note.COLUMN_ID, Note.COLUMN_NOTE, Note.COLUMN_TIMESTAMP},
+                new String[]{Note.COLUMN_ID, Note.COLUMN_NOTE, Note.COLUMN_TIMESTAMP, Note.CATEGORY_NAME},
                 Note.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -102,7 +105,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Note note = new Note(
                 cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_NOTE)),
-                cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)),
+                cursor.getString(cursor.getColumnIndex(Note.CATEGORY_NAME)));
 
         // close the db connection
         cursor.close();
@@ -133,12 +137,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return category;
     }
-
+    public void setCategoryName(String categoryName){this.categoryName = categoryName;}
     public List<Note> getAllNotes() {
         List<Note> notes = new ArrayList<>();
 
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME + " ORDER BY " +
+        //TODO : check for syntax errors
+        String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME +
+                " WHERE " + Note.CATEGORY_NAME + " = \"" + categoryName + "\" ORDER BY " +
                 Note.COLUMN_TIMESTAMP + " DESC";
 
         SQLiteDatabase db = this.getWritableDatabase();
