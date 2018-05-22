@@ -142,7 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Note> notes = new ArrayList<>();
 
         // Select All Query
-        //TODO : check for syntax errors
         String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME +
                 " WHERE " + Note.CATEGORY_NAME + " = \"" + categoryName + "\" ORDER BY " +
                 Note.COLUMN_TIMESTAMP + " DESC";
@@ -198,7 +197,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int getNotesCount() {
-        String countQuery = "SELECT  * FROM " + Note.TABLE_NAME;
+        String countQuery = "SELECT  * FROM " + Note.TABLE_NAME +
+                " WHERE " + Note.CATEGORY_NAME + " = \"" + categoryName + "\"";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
