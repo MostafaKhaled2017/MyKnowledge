@@ -40,7 +40,7 @@ public class CategoriesActivity extends AppCompatActivity {
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app
     //TODO : revise all the yellow and other marks
-    //TODO : find a way to handle database lost and find a way to make a backup to it
+    //TODO : find a way to handle database lost and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
     //TODO : add welcome screen with the app name and icon
     //TODO : make when new element added it presents in its place according to the sort type
