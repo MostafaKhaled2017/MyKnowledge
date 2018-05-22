@@ -1,6 +1,7 @@
 package com.mk.myknowldge.activities;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -98,6 +99,7 @@ public class CategoriesActivity extends AppCompatActivity {
                 recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
+                //TODO : try to move the click event from the adapter to here
             }
 
             @Override

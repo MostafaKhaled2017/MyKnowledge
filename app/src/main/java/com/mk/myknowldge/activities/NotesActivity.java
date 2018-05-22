@@ -87,6 +87,7 @@ public class NotesActivity extends AppCompatActivity {
                 recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
+
             }
 
             @Override
