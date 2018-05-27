@@ -2,12 +2,11 @@ package com.mk.myknowldge.helpers;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import com.mk.myknowldge.activities.NotesActivity;
 import com.mk.myknowldge.model.Category;
 import com.mk.myknowldge.model.Note;
 
@@ -23,7 +22,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Database Name
     private static final String DATABASE_NAME = "notes_db";
 
-    String categoryName;
+    private int categoryId;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -51,15 +50,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertNote(String note, String categoryName) {
+    public long insertNote(String name, int categoryId, String note) {
         // get writable database as we want to write data
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         // `id` and `timestamp` will be inserted automatically.
         // no need to add them
-        values.put(Note.COLUMN_NOTE, note);
-        values.put(Note.CATEGORY_NAME, categoryName);
+        values.put(Note.COLUMN_CONTENT, note);
+        values.put(Note.CATEGORY_ID, categoryId);
+        values.put(Note.COLUMN_NAME, name);
         // insert row
         long id = db.insert(Note.TABLE_NAME, null, values);
 
@@ -94,7 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(Note.TABLE_NAME,
-                new String[]{Note.COLUMN_ID, Note.COLUMN_NOTE, Note.COLUMN_TIMESTAMP, Note.CATEGORY_NAME},
+                new String[]{Note.COLUMN_ID, Note.COLUMN_CONTENT, Note.COLUMN_TIMESTAMP, Note.CATEGORY_ID, Note.COLUMN_NAME},
                 Note.COLUMN_ID + "=?",
                 new String[]{String.valueOf(id)}, null, null, null, null);
 
@@ -104,9 +104,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // prepare name object
         Note note = new Note(
                 cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)),
-                cursor.getString(cursor.getColumnIndex(Note.COLUMN_NOTE)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndex(Note.COLUMN_CONTENT)),
                 cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)),
-                cursor.getString(cursor.getColumnIndex(Note.CATEGORY_NAME)));
+                cursor.getString(cursor.getColumnIndex(Note.CATEGORY_ID))
+        );
 
         // close the db connection
         cursor.close();
@@ -137,15 +139,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return category;
     }
-    public void setCategoryName(String categoryName){this.categoryName = categoryName;}
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+        Log.v("logging", "category ID in database Helper is  in parameter: " + categoryId
+        + "category ID in database Helper is  in class : " + this.categoryId
+        );
+
+    }
+
+
     public List<Note> getAllNotes() {
         List<Note> notes = new ArrayList<>();
 
+        Log.v("logging", "category ID in database Helper is : " + categoryId);
+
         // Select All Query
         String selectQuery = "SELECT  * FROM " + Note.TABLE_NAME +
-                " WHERE " + Note.CATEGORY_NAME + " = \"" + categoryName + "\" ORDER BY " +
+                " WHERE " + Note.CATEGORY_ID + " = " + categoryId + " ORDER BY " +
                 Note.COLUMN_TIMESTAMP + " DESC";
-
+        Log.v("logging", "query of get all notes is : " + selectQuery);
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -154,8 +167,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Note note = new Note();
                 note.setId(cursor.getInt(cursor.getColumnIndex(Note.COLUMN_ID)));
-                note.setNote(cursor.getString(cursor.getColumnIndex(Note.COLUMN_NOTE)));
+                note.setContent(cursor.getString(cursor.getColumnIndex(Note.COLUMN_CONTENT)));
                 note.setTimestamp(cursor.getString(cursor.getColumnIndex(Note.COLUMN_TIMESTAMP)));
+                note.setTitle(cursor.getString(cursor.getColumnIndex(Note.COLUMN_NAME)));
 
                 notes.add(note);
             } while (cursor.moveToNext());
@@ -198,7 +212,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public int getNotesCount() {
         String countQuery = "SELECT  * FROM " + Note.TABLE_NAME +
-                " WHERE " + Note.CATEGORY_NAME + " = \"" + categoryName + "\"";
+                " WHERE " + Note.CATEGORY_ID + " = " + categoryId;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
 
@@ -227,7 +241,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Note.COLUMN_NOTE, note.getNote());
+        values.put(Note.COLUMN_CONTENT, note.getContent());
+        values.put(Note.COLUMN_NAME, note.getTitle());
 
         // updating row
         return db.update(Note.TABLE_NAME, values, Note.COLUMN_ID + " = ?",
@@ -240,6 +255,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Category.COLUMN_NAME, category.getName());
 
+        /*db.execSQL("UPDATE " + Note.TABLE_NAME +
+                " SET " + Note.CATEGORY_ID + " = \"" + category.getTitle() +
+                "\" WHERE " + Note.CATEGORY_ID +" = \"" + oldCategoryName + "\"");*/
         // updating row
         return db.update(Category.TABLE_NAME, values, Category.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(category.getId())});

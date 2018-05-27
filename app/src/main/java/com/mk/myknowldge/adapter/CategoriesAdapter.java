@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             public void onClick(View view) {
                 Intent i = new Intent(context, NotesActivity.class);
                 i.putExtra("category_name",category.getName());
+                i.putExtra("category_id",category.getId());
+                Log.v("logging", "category ID in adapter is : " + category.getId());
                 context.startActivity(i);
             }
         });

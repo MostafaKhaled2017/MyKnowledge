@@ -37,13 +37,16 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
 
+    //TODO : sort the categories in ascending order from the first time
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app
     //TODO : revise all the yellow and other marks
     //TODO : find a way to handle database lost and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
+    //TODO : add app icon by searching on free website(s)
     //TODO : add welcome screen with the app name and icon
     //TODO : make when new element added it presents in its place according to the sort type
+    //TODO : remove unused files (as xml, java, photos, values ...)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -204,7 +207,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
         final EditText inputCategory = view.findViewById(R.id.dialog_value);
         TextView dialogTitle = view.findViewById(R.id.dialog_title);
-        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_category_title) : getString(R.string.lbl_edit_category_title));
+        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_category_name) : getString(R.string.lbl_edit_category_name));
 
         if (shouldUpdate && category != null) {
             inputCategory.setText(category.getName());

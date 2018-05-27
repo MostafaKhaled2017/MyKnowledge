@@ -13,9 +13,9 @@
         android:layout_marginBottom="@dimen/dimen_10"
         android:fontFamily="sans-serif-medium"
         android:lineSpacingExtra="8sp"
-        android:text="@string/lbl_new_note_title"
+        android:text="@string/lbl_new_note_name"
         android:textColor="@color/colorAccent"
-        android:textSize="@dimen/lbl_new_note_title"
+        android:textSize="@dimen/lbl_new_note_name"
         android:textStyle="normal" />
 
     <EditText

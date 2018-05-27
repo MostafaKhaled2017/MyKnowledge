@@ -5,7 +5,6 @@ public class Category {
 
     public static final String COLUMN_ID = "ID";
     public static final String COLUMN_NAME = "CategoryName";
-    public static final String COLUMN_TIMESTAMP = "Timestamp";
 
     private int id;
     private String cName;

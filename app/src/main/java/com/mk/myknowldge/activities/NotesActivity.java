@@ -11,12 +11,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mk.myknowldge.R;
 import com.mk.myknowldge.adapter.NotesAdapter;
@@ -25,6 +22,7 @@ import com.mk.myknowldge.model.Note;
 import com.mk.myknowldge.utils.MyDividerItemDecoration;
 import com.mk.myknowldge.utils.RecyclerTouchListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,8 +31,15 @@ public class NotesActivity extends AppCompatActivity {
     private List<Note> notesList = new ArrayList<>();
     private CoordinatorLayout coordinatorLayout;
     private RecyclerView recyclerView;
+    static boolean shouldUpdate;
+    static int position;
+    static Note note;
     private TextView noNotesView;
-    private static String categoryName="My Knowledge";
+    Intent i;
+
+    private static String categoryName = "My Knowledge";
+    private static int categoryId = -1;
+
 
     private DatabaseHelper db;
 
@@ -45,8 +50,11 @@ public class NotesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-        if(intent != null)
+        if (intent != null) {
             categoryName = intent.getStringExtra("category_name");
+            categoryId = intent.getIntExtra("category_id", -1);
+            Log.v("logging", "category ID in notesActivity is : " + categoryId);
+        }
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -56,16 +64,25 @@ public class NotesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_view);
 
+
         db = new DatabaseHelper(this);
-        db.setCategoryName(categoryName);
+        db.setCategoryId(categoryId);
 
         notesList.addAll(db.getAllNotes());
+        Log.v("logging", "the size of notes list is : " + notesList.size());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showNoteDialog(false, null, -1);
+                setNoteData(false, null, -1);
+                i = new Intent(NotesActivity.this, AddNoteActivity.class);
+                i.putExtra("categoryName", categoryName);
+                i.putExtra("category_id", categoryId);
+                i.putExtra("should_update", shouldUpdate);
+                i.putExtra("position", position);
+                i.putExtra("note", (Serializable) note);
+                startActivity(i);
             }
         });
 
@@ -75,6 +92,7 @@ public class NotesActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         recyclerView.setAdapter(mAdapter);
+
 
         toggleEmptyNotes();
 
@@ -97,47 +115,12 @@ public class NotesActivity extends AppCompatActivity {
         }));
     }
 
-    /**
-     * Inserting new name in db
-     * and refreshing the list
-     */
-    private void createNote(String note) {
-        // inserting name in db and getting
-        // newly inserted name id
-        long id = db.insertNote(note, categoryName);
-
-        // get the newly inserted name from db
-        Note n = db.getNote(id);
-
-        if (n != null) {
-            // adding new name to array list at 0 position
-            notesList.add(0, n);
-
-            // refreshing the list
-            mAdapter.notifyDataSetChanged();
-
-            toggleEmptyNotes();
-        }
+    private void setNoteData(final boolean shouldUpdate, final Note note, final int position) {
+        this.shouldUpdate = shouldUpdate;
+        this.position = position;
+        this.note = note;
     }
 
-    /**
-     * Updating name in db and updating
-     * item in the list by its position
-     */
-    private void updateNote(String note, int position) {
-        Note n = notesList.get(position);
-        // updating name text
-        n.setNote(note);
-
-        // updating name in db
-        db.updateNote(n);
-
-        // refreshing the list
-        notesList.set(position, n);
-        mAdapter.notifyItemChanged(position);
-
-        toggleEmptyNotes();
-    }
 
     /**
      * Deleting name from SQLite and removing the
@@ -154,6 +137,10 @@ public class NotesActivity extends AppCompatActivity {
         toggleEmptyNotes();
     }
 
+    /* send the data to the addNoteActivity
+     * TODO : make it works on click
+     */
+
     /**
      * Opens dialog with Edit - Delete options
      * Edit - 0
@@ -168,74 +155,22 @@ public class NotesActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
-                    showNoteDialog(true, notesList.get(position), position);
-                } else {
+                    setNoteData(true, notesList.get(position), position);
+                    i.putExtra("should_update", true);
+                    i.putExtra("position", position);
+                    i.putExtra("note", (Serializable) notesList.get(position));
+                    i.putExtra("title", notesList.get(position).getTitle());
+                    i.putExtra("content", notesList.get(position).getContent());
+                    startActivity(i);                } else {
                     deleteNote(position);
                 }
             }
         });
         builder.show();
     }
-
-    /**
-     * Shows alert dialog with EditText options to enter / edit
-     * a name.
-     * when shouldUpdate=true, it automatically displays old name and changes the
-     * button text to UPDATE
-     */
-    private void showNoteDialog(final boolean shouldUpdate, final Note note, final int position) {
-        LayoutInflater layoutInflaterAndroid = LayoutInflater.from(getApplicationContext());
-        View view = layoutInflaterAndroid.inflate(R.layout.dialog, null);
-
-        AlertDialog.Builder alertDialogBuilderUserInput = new AlertDialog.Builder(NotesActivity.this);
-        alertDialogBuilderUserInput.setView(view);
-
-        final EditText inputNote = view.findViewById(R.id.dialog_value);
-        TextView dialogTitle = view.findViewById(R.id.dialog_title);
-        dialogTitle.setText(!shouldUpdate ? getString(R.string.lbl_new_note_title) : getString(R.string.lbl_edit_note_title));
-
-        if (shouldUpdate && note != null) {
-            inputNote.setText(note.getNote());
-        }
-        alertDialogBuilderUserInput
-                .setCancelable(false)
-                .setPositiveButton(shouldUpdate ? "update" : "save", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialogBox, int id) {
-
-                    }
-                })
-                .setNegativeButton("cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialogBox, int id) {
-                                dialogBox.cancel();
-                            }
-                        });
-
-        final AlertDialog alertDialog = alertDialogBuilderUserInput.create();
-        alertDialog.show();
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Show toast message when no text is entered
-                if (TextUtils.isEmpty(inputNote.getText().toString())) {
-                    Toast.makeText(NotesActivity.this, "Enter name!", Toast.LENGTH_SHORT).show();
-                    return;
-                } else {
-                    alertDialog.dismiss();
-                }
-
-                // check if user updating name
-                if (shouldUpdate && note != null) {
-                    // update name by it's id
-                    updateNote(inputNote.getText().toString(), position);
-                } else {
-                    // create new name
-                    createNote(inputNote.getText().toString());
-                }
-            }
-        });
-    }
+    //TODO : remove the fab icon and replace it with add icon in the bar
+    //TODO : add back button navigation to the bar
+    //TODO : hanle that when the app returns from AddNoteActivity to NotesActivity no title appear
 
     /**
      * Toggling list and empty notes view
@@ -250,7 +185,10 @@ public class NotesActivity extends AppCompatActivity {
         }
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(NotesActivity.this, CategoriesActivity.class);
+        startActivity(i);
     }
 }

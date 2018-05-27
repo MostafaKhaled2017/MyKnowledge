@@ -4,49 +4,58 @@ public class Note {
     public static final String TABLE_NAME = "notes";
 
     public static final String COLUMN_ID = "ID";
-    public static final String COLUMN_NOTE = "Name";
+    public static final String COLUMN_NAME = "Name";
+    public static final String COLUMN_CONTENT = "content";
     public static final String COLUMN_TIMESTAMP = "Timestamp";
-    public static final String CATEGORY_NAME = "CategoryName";
+    public static final String CATEGORY_ID = "CategoryId";
 
 
     private int id;
-    private String note;
+    private String title;
+    private String content;
     private String timestamp;
-    private String categoryName;
+    private String categoryId;
 
 
     // Create table SQL query
     public static final String CREATE_TABLE =
             "CREATE TABLE " + TABLE_NAME + "("
                     + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                    + COLUMN_NOTE + " TEXT,"
+                    + COLUMN_NAME + " TEXT,"
+                    + COLUMN_CONTENT + " TEXT,"
                     + COLUMN_TIMESTAMP + " DATETIME DEFAULT CURRENT_TIMESTAMP,"
-                    + CATEGORY_NAME + " TEXT"
+                    + CATEGORY_ID + " INTEGER"
                     + ")";
 
     public Note() {
     }
 
-    public Note(int id, String note, String timestamp, String categoryName) {
+    public Note(int id, String title, String content, String timestamp, String categoryId) {
         this.id = id;
-        this.note = note;
+        this.title = title;
+        this.content = content;
         this.timestamp = timestamp;
-        this.categoryName = categoryName;
+        this.categoryId = categoryId;
     }
 
     public int getId() {
         return id;
     }
 
-    public String getNote() {
-        return note;
+    public String getContent() {
+        return content;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getTitle() {
+        return title;
     }
-    public void setNote(String note) {
-        this.note = note;
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getTimestamp() {
@@ -57,8 +66,10 @@ public class Note {
         this.id = id;
     }
 
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
+    public void setTitle(String title) {this.title = title; }
+
+    public void setCategoryId(int categoryName) {
+        this.categoryId = categoryId;
     }
 
     public void setTimestamp(String timestamp) {
