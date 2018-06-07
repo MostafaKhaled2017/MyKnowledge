@@ -35,17 +35,18 @@ public class CategoriesActivity extends AppCompatActivity {
     private TextView noThingView;
 
     private DatabaseHelper db;
+
     //TODO : handle back navigation for non-handled things
     //TODO : use firebase or database on server to store databases of the app (search for that)
-    //TODO : sort the categories in ascending order from the first time
+    //TODO : sort the categories in ascending order from the first time (1)
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app and take ideas from memo app
     //TODO : revise all the yellow and other marks
     //TODO : find a way to handle database lost on the old phone not the new and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
-    //TODO : add app icon by searching on free website(s)
     //TODO : add welcome screen with the app name and icon
-    //TODO : make when new element added it presents in its place according to the sort type
+    //TODO : add the time to the date
+    //TODO : make when new element added it presents in its place according to the sort type (2)
     //TODO : remove unused files (as xml, java, photos, values ...)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,15 +80,15 @@ public class CategoriesActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         recyclerView.setAdapter(mAdapter);
 
-        if(categoriesList.isEmpty()){
+        if (categoriesList.isEmpty()) {
             long bookdId = db.insertCategory("Books");
             long coursesId = db.insertCategory("Courses");
             long lifeId = db.insertCategory("Life");
             long othersId = db.insertCategory("Others");
-            categoriesList.add(0, db.getCategory(bookdId));
-            categoriesList.add(0, db.getCategory(coursesId));
-            categoriesList.add(0, db.getCategory(lifeId));
-            categoriesList.add(0, db.getCategory(othersId));
+            categoriesList.add(db.getCategory(bookdId));
+            categoriesList.add(db.getCategory(coursesId));
+            categoriesList.add(db.getCategory(lifeId));
+            categoriesList.add(db.getCategory(othersId));
 
         }
 
@@ -124,9 +125,10 @@ public class CategoriesActivity extends AppCompatActivity {
         // get the newly inserted name from db
         Category n = db.getCategory(id);
 
+        // Clear the list then add categories again to be sorted
         if (n != null) {
-            // adding new name to array list at 0 position
-            categoriesList.add(0, n);
+            categoriesList.clear();
+            categoriesList.addAll(db.getAllCategories());
 
             // refreshing the list
             mAdapter.notifyDataSetChanged();
