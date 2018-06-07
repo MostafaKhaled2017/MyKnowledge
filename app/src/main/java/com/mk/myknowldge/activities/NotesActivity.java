@@ -22,23 +22,19 @@ import com.mk.myknowldge.model.Note;
 import com.mk.myknowldge.utils.MyDividerItemDecoration;
 import com.mk.myknowldge.utils.RecyclerTouchListener;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotesActivity extends AppCompatActivity {
     private NotesAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
-    private CoordinatorLayout coordinatorLayout;
-    private RecyclerView recyclerView;
-    static boolean shouldUpdate;
-    static int position;
-    static Note note;
+    boolean shouldUpdate;
+     int position;
+     Note note;
     private TextView noNotesView;
-    Intent i;
 
-    private static String categoryName = "My Knowledge";
-    private static int categoryId = -1;
+    private  String categoryName = "My Knowledge";
+    private  int categoryId = -1;
 
 
     private DatabaseHelper db;
@@ -53,15 +49,13 @@ public class NotesActivity extends AppCompatActivity {
         if (intent != null) {
             categoryName = intent.getStringExtra("category_name");
             categoryId = intent.getIntExtra("category_id", -1);
-            Log.v("logging", "category ID in notesActivity is : " + categoryId);
         }
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbarTitle.setText(categoryName);
 
-        coordinatorLayout = findViewById(R.id.coordinator_layout);
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_view);
 
 
@@ -69,19 +63,19 @@ public class NotesActivity extends AppCompatActivity {
         db.setCategoryId(categoryId);
 
         notesList.addAll(db.getAllNotes());
-        Log.v("logging", "the size of notes list is : " + notesList.size());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 setNoteData(false, null, -1);
-                i = new Intent(NotesActivity.this, AddNoteActivity.class);
-                i.putExtra("categoryName", categoryName);
+                Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);
+                i.putExtra("category_name", categoryName);
                 i.putExtra("category_id", categoryId);
                 i.putExtra("should_update", shouldUpdate);
                 i.putExtra("position", position);
-                i.putExtra("note", (Serializable) note);
+                i.putExtra("title", "");
+                i.putExtra("content", "");
                 startActivity(i);
             }
         });
@@ -105,7 +99,8 @@ public class NotesActivity extends AppCompatActivity {
                 recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
-
+                setNoteData(true, notesList.get(position), position);
+                sendIntent(position);
             }
 
             @Override
@@ -156,28 +151,41 @@ public class NotesActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (which == 0) {
                     setNoteData(true, notesList.get(position), position);
-                    i.putExtra("should_update", true);
-                    i.putExtra("position", position);
-                    i.putExtra("note", (Serializable) notesList.get(position));
-                    i.putExtra("title", notesList.get(position).getTitle());
-                    i.putExtra("content", notesList.get(position).getContent());
-                    startActivity(i);                } else {
+                    sendIntent(position);
+
+                } else {
                     deleteNote(position);
                 }
             }
         });
         builder.show();
     }
-    //TODO : remove the fab icon and replace it with add icon in the bar
+    //TODO : think about remove the fab icon and replace it with add icon in the bar
     //TODO : add back button navigation to the bar
-    //TODO : hanle that when the app returns from AddNoteActivity to NotesActivity no title appear
+
+    public void sendIntent(int position){
+        Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);
+        i.putExtra("category_name", categoryName);
+        i.putExtra("category_id", categoryId);
+        i.putExtra("should_update", true);
+        i.putExtra("position", position);
+        i.putExtra("title", notesList.get(position).getTitle());
+        i.putExtra("content", notesList.get(position).getContent());
+        startActivity(i);
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+            categoryName = intent.getStringExtra("category_name");
+            categoryId = intent.getIntExtra("category_id", -1);
+
+    }
 
     /**
      * Toggling list and empty notes view
      */
     private void toggleEmptyNotes() {
         // you can check notesList.size() > 0
-
         if (db.getNotesCount() > 0) {
             noNotesView.setVisibility(View.GONE);
         } else {

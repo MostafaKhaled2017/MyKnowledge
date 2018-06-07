@@ -1,7 +1,6 @@
 package com.mk.myknowldge.activities;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -36,12 +35,13 @@ public class CategoriesActivity extends AppCompatActivity {
     private TextView noThingView;
 
     private DatabaseHelper db;
-
+    //TODO : handle back navigation for non-handled things
+    //TODO : use firebase or database on server to store databases of the app (search for that)
     //TODO : sort the categories in ascending order from the first time
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
-    //TODO : enhance the design of the app
+    //TODO : enhance the design of the app and take ideas from memo app
     //TODO : revise all the yellow and other marks
-    //TODO : find a way to handle database lost and find a way to make a backup to it and allow user to export it
+    //TODO : find a way to handle database lost on the old phone not the new and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
     //TODO : add app icon by searching on free website(s)
     //TODO : add welcome screen with the app name and icon
@@ -264,4 +264,9 @@ public class CategoriesActivity extends AppCompatActivity {
             noThingView.setVisibility(View.VISIBLE);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        this.finishAffinity();
     }
+}

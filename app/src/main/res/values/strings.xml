@@ -9,6 +9,7 @@
     <string name="lbl_new_category_name">New Category</string>
     <string name="lbl_edit_category_name">Edit Category</string>
     <string name="hint_enter_category">Enter the name here</string>
+    <string name="save">Save</string>
 
 
 </resources>
