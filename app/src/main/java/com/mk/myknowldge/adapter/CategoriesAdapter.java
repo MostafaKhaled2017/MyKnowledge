@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -30,13 +31,13 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name;
         public TextView dot;
-        public TextView timestamp;
+        public RelativeLayout relativeLayout;
 
         public MyViewHolder(View view) {
             super(view);
             name = view.findViewById(R.id.category_name);
             dot = view.findViewById(R.id.dot);
-            timestamp = view.findViewById(R.id.timestamp);
+            relativeLayout = view.findViewById(R.id.categories_recycler_view);
         }
     }
 
@@ -57,13 +58,12 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Category category = categoriesList.get(position);
-//TODO : remove final ?
         // Displaying dot from HTML character code
         holder.dot.setText(Html.fromHtml("&#8226;"));
 
         holder.name.setText(category.getName());
 
-        holder.name.setOnClickListener(new View.OnClickListener() {
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, NotesActivity.class);

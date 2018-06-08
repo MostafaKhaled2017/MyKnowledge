@@ -29,8 +29,8 @@ public class NotesActivity extends AppCompatActivity {
     private NotesAdapter mAdapter;
     private List<Note> notesList = new ArrayList<>();
     boolean shouldUpdate;
-     int position;
-     Note note;
+    int position;
+    Note note;
     private TextView noNotesView;
 
     private  String categoryName = "My Knowledge";
@@ -44,7 +44,7 @@ public class NotesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_notes);
         Intent intent = getIntent();
         if (intent != null) {
             categoryName = intent.getStringExtra("category_name");
@@ -54,6 +54,8 @@ public class NotesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbarTitle.setText(categoryName);
+        if (getSupportActionBar() != null)
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         noNotesView = findViewById(R.id.empty_view);
@@ -179,6 +181,12 @@ public class NotesActivity extends AppCompatActivity {
             categoryName = intent.getStringExtra("category_name");
             categoryId = intent.getIntExtra("category_id", -1);
 
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     /**

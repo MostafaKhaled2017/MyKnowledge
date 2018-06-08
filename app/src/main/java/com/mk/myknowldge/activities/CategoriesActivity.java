@@ -48,6 +48,7 @@ public class CategoriesActivity extends AppCompatActivity {
     //TODO : add the time to the date
     //TODO : make when new element added it presents in its place according to the sort type (2)
     //TODO : remove unused files (as xml, java, photos, values ...)
+    //TODO : the to-do(s) from notes on keep
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,18 +81,6 @@ public class CategoriesActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
         recyclerView.setAdapter(mAdapter);
 
-        if (categoriesList.isEmpty()) {
-            long bookdId = db.insertCategory("Books");
-            long coursesId = db.insertCategory("Courses");
-            long lifeId = db.insertCategory("Life");
-            long othersId = db.insertCategory("Others");
-            categoriesList.add(db.getCategory(bookdId));
-            categoriesList.add(db.getCategory(coursesId));
-            categoriesList.add(db.getCategory(lifeId));
-            categoriesList.add(db.getCategory(othersId));
-
-        }
-
         toggleEmptyCategories();
 
         /**
@@ -103,7 +92,6 @@ public class CategoriesActivity extends AppCompatActivity {
                 recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, final int position) {
-                //TODO : try to move the click event from the adapter to here
             }
 
             @Override
@@ -168,6 +156,16 @@ public class CategoriesActivity extends AppCompatActivity {
         categoriesList.remove(position);
         mAdapter.notifyItemRemoved(position);
 
+        if (categoriesList.isEmpty()) {
+            long bookdId = db.insertCategory("Books");
+            long coursesId = db.insertCategory("Courses");
+            long lifeId = db.insertCategory("Life Lessons");
+            long othersId = db.insertCategory("Others");
+            categoriesList.add(db.getCategory(bookdId));
+            categoriesList.add(db.getCategory(coursesId));
+            categoriesList.add(db.getCategory(lifeId));
+            categoriesList.add(db.getCategory(othersId));
+        }
         toggleEmptyCategories();
     }
 

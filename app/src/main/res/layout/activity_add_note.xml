@@ -28,8 +28,7 @@
             android:layout_height="wrap_content"
             android:hint="Title"
             android:inputType="textCapSentences"
-            android:singleLine="true" />
-
+            android:singleLine="true"/>
 
         <android.support.design.widget.TextInputEditText
             android:id="@+id/content"
