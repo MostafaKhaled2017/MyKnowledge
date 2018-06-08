@@ -39,8 +39,6 @@ public class NotesActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
 
-    //TODO : add the project to bitBuchet as private
-    //TODO : enhance the design of the app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,10 +132,6 @@ public class NotesActivity extends AppCompatActivity {
         toggleEmptyNotes();
     }
 
-    /* send the data to the addNoteActivity
-     * TODO : make it works on click
-     */
-
     /**
      * Opens dialog with Edit - Delete options
      * Edit - 0
@@ -163,7 +157,6 @@ public class NotesActivity extends AppCompatActivity {
         builder.show();
     }
     //TODO : think about remove the fab icon and replace it with add icon in the bar
-    //TODO : add back button navigation to the bar
 
     public void sendIntent(int position){
         Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);

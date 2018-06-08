@@ -24,7 +24,6 @@ import java.util.List;
 
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyViewHolder> {
-    //TODO : edit
     private Context context;
     private List<Category> categoriesList;
 
@@ -67,8 +66,8 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, NotesActivity.class);
-                i.putExtra("category_name",category.getName());
-                i.putExtra("category_id",category.getId());
+                i.putExtra("category_name", category.getName());
+                i.putExtra("category_id", category.getId());
                 Log.v("logging", "category ID in adapter is : " + category.getId());
                 context.startActivity(i);
             }

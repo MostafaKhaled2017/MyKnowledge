@@ -36,7 +36,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(Note.CREATE_TABLE);
         db.execSQL(Category.CREATE_TABLE);
 
-        //TODO : add defaults to the tables
     }
 
     // Upgrading database

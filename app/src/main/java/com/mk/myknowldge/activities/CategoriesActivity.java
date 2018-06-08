@@ -36,17 +36,14 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
 
-    //TODO : handle back navigation for non-handled things
     //TODO : use firebase or database on server to store databases of the app (search for that)
-    //TODO : sort the categories in ascending order from the first time (1)
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app and take ideas from memo app
     //TODO : revise all the yellow and other marks
     //TODO : find a way to handle database lost on the old phone not the new and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
-    //TODO : add welcome screen with the app name and icon
-    //TODO : add the time to the date
-    //TODO : make when new element added it presents in its place according to the sort type (2)
+    //TODO : add welcome screen with the app name and icon (not nesecarry)
+    //TODO : add the time and day to the date
     //TODO : remove unused files (as xml, java, photos, values ...)
     //TODO : the to-do(s) from notes on keep
     @Override
