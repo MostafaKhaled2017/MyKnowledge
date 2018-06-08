@@ -4,17 +4,28 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name"
         android:icon="@mipmap/icon_round"
+        android:label="@string/app_name"
         android:roundIcon="@mipmap/icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:name=".activities.NotesActivity"/>
 
-        <activity android:name=".activities.CategoriesActivity" >
+        <activity
+            android:name=".activities.NotesActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <!--
+            TODO :
+            <meta-data
+             android:name="android.app.searchable"
+             android:resource="@xml/searchable" />
+
+            <intent-filter>
+              <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>-->
+        </activity>
+
+        <activity android:name=".activities.CategoriesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -22,9 +33,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".activities.AddNoteActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:name=".activities.AddNoteActivity"/>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

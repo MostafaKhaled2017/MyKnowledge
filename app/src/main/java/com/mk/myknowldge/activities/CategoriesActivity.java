@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     //TODO : use firebase or database on server to store databases of the app (search for that)
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
-    //TODO : enhance the design of the app and take ideas from memo app
+    //TODO : enhance the design of the app and take ideas from memo app and edit the fab icon design
     //TODO : revise all the yellow and other marks
     //TODO : find a way to handle database lost on the old phone not the new and find a way to make a backup to it and allow user to export it
     //TODO : optimize code as possible multiple times
@@ -46,6 +47,8 @@ public class CategoriesActivity extends AppCompatActivity {
     //TODO : add the time and day to the date
     //TODO : remove unused files (as xml, java, photos, values ...)
     //TODO : the to-do(s) from notes on keep
+    //TODO : add search engine
+    //TODO : add about app page and in it add contact developer by whats for example
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,7 @@ public class CategoriesActivity extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.toolbar_title);
         setSupportActionBar(toolbar);
         toolbarTitle.setText("Main Categories");
+        toolbarTitle.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
 
         coordinatorLayout = findViewById(R.id.coordinator_layout);
         recyclerView = findViewById(R.id.recycler_view);
@@ -96,6 +100,13 @@ public class CategoriesActivity extends AppCompatActivity {
                 showActionsDialog(position);
             }
         }));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu_add_activity; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
     }
 
     /**

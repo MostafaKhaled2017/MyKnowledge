@@ -1,5 +1,7 @@
 package com.mk.myknowldge.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,8 +12,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -33,8 +37,8 @@ public class NotesActivity extends AppCompatActivity {
     Note note;
     private TextView noNotesView;
 
-    private  String categoryName = "My Knowledge";
-    private  int categoryId = -1;
+    private String categoryName = "My Knowledge";
+    private int categoryId = -1;
 
 
     private DatabaseHelper db;
@@ -42,73 +46,80 @@ public class NotesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notes);
+        setContentView(R.layout.activity_main);
         Intent intent = getIntent();
-        if (intent != null) {
-            categoryName = intent.getStringExtra("category_name");
-            categoryId = intent.getIntExtra("category_id", -1);
-        }
-        TextView toolbarTitle = findViewById(R.id.toolbar_title);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbarTitle.setText(categoryName);
-        if (getSupportActionBar() != null)
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        noNotesView = findViewById(R.id.empty_view);
+        if (intent != null)
+            //if (intent.getStringExtra("tag") == "categories") {
+                categoryName = intent.getStringExtra("category_name");
+                categoryId = intent.getIntExtra("category_id", -1);
+            //}//TODO
+            /*else
+                handleIntent(intent);*/
 
 
-        db = new DatabaseHelper(this);
-        db.setCategoryId(categoryId);
+                TextView toolbarTitle = findViewById(R.id.toolbar_title);
+                Toolbar toolbar = findViewById(R.id.toolbar);
+                setSupportActionBar(toolbar);
+                toolbarTitle.setText(categoryName);
+                if (getSupportActionBar() != null)
+                    getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        notesList.addAll(db.getAllNotes());
+                RecyclerView recyclerView = findViewById(R.id.recycler_view);
+                noNotesView = findViewById(R.id.empty_view);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setNoteData(false, null, -1);
-                Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);
-                i.putExtra("category_name", categoryName);
-                i.putExtra("category_id", categoryId);
-                i.putExtra("should_update", shouldUpdate);
-                i.putExtra("position", position);
-                i.putExtra("title", "");
-                i.putExtra("content", "");
-                startActivity(i);
+
+                db = new DatabaseHelper(this);
+                db.setCategoryId(categoryId);
+
+                notesList.addAll(db.getAllNotes());
+
+                FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        setNoteData(false, null, -1);
+                        Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);
+                        i.putExtra("category_name", categoryName);
+                        i.putExtra("category_id", categoryId);
+                        i.putExtra("should_update", shouldUpdate);
+                        i.putExtra("position", position);
+                        i.putExtra("title", "");
+                        i.putExtra("content", "");
+                        startActivity(i);
+                    }
+                });
+
+                mAdapter = new NotesAdapter(this, notesList);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView.setLayoutManager(mLayoutManager);
+                recyclerView.setItemAnimator(new DefaultItemAnimator());
+                recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
+                recyclerView.setAdapter(mAdapter);
+
+
+                toggleEmptyNotes();
+
+                /**
+                 * On long press on RecyclerView item, open alert dialog
+                 * with options to choose
+                 * Edit and Delete
+                 * */
+                recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
+                        recyclerView, new RecyclerTouchListener.ClickListener() {
+                    @Override
+                    public void onClick(View view, final int position) {
+                        setNoteData(true, notesList.get(position), position);
+                        sendIntent(position);
+                    }
+
+                    @Override
+                    public void onLongClick(View view, int position) {
+                        showActionsDialog(position);
+                    }
+                }));
             }
-        });
-
-        mAdapter = new NotesAdapter(this, notesList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
-        recyclerView.setAdapter(mAdapter);
 
 
-        toggleEmptyNotes();
-
-        /**
-         * On long press on RecyclerView item, open alert dialog
-         * with options to choose
-         * Edit and Delete
-         * */
-        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(this,
-                recyclerView, new RecyclerTouchListener.ClickListener() {
-            @Override
-            public void onClick(View view, final int position) {
-                setNoteData(true, notesList.get(position), position);
-                sendIntent(position);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-                showActionsDialog(position);
-            }
-        }));
-    }
 
     private void setNoteData(final boolean shouldUpdate, final Note note, final int position) {
         this.shouldUpdate = shouldUpdate;
@@ -116,7 +127,20 @@ public class NotesActivity extends AppCompatActivity {
         this.note = note;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        // Inflate the menu_add_activity; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_notes_activity, menu);
 
+       /* // Associate searchable configuration with the SearchView
+        SearchManager searchManager =//TODO
+                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView =
+                (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(
+                searchManager.getSearchableInfo(getComponentName()));*/
+        return true;
+    }
     /**
      * Deleting name from SQLite and removing the
      * item from the list by its position
@@ -158,7 +182,7 @@ public class NotesActivity extends AppCompatActivity {
     }
     //TODO : think about remove the fab icon and replace it with add icon in the bar
 
-    public void sendIntent(int position){
+    public void sendIntent(int position) {
         Intent i = new Intent(NotesActivity.this, AddNoteActivity.class);
         i.putExtra("category_name", categoryName);
         i.putExtra("category_id", categoryId);
@@ -168,12 +192,24 @@ public class NotesActivity extends AppCompatActivity {
         i.putExtra("content", notesList.get(position).getContent());
         startActivity(i);
     }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        //if (intent.getStringExtra("tag") == "categories") {
             categoryName = intent.getStringExtra("category_name");
             categoryId = intent.getIntExtra("category_id", -1);
+        /*} else
+            handleIntent(intent);*/ //TODO
 
+    }
+
+    private void handleIntent(Intent intent) {
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            //use the query to search your data somehow
+        }
     }
 
     @Override

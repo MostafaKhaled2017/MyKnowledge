@@ -66,6 +66,7 @@ public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.My
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(context, NotesActivity.class);
+                i.putExtra("tag","categories");
                 i.putExtra("category_name", category.getName());
                 i.putExtra("category_id", category.getId());
                 Log.v("logging", "category ID in adapter is : " + category.getId());
