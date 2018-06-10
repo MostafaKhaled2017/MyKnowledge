@@ -240,8 +240,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(Note.COLUMN_CONTENT, note.getContent());
         values.put(Note.COLUMN_NAME, note.getTitle());
+        values.put(Note.COLUMN_CONTENT, note.getContent());
 
         // updating row
         return db.update(Note.TABLE_NAME, values, Note.COLUMN_ID + " = ?",
@@ -254,10 +254,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Category.COLUMN_NAME, category.getName());
 
-        /*db.execSQL("UPDATE " + Note.TABLE_NAME +
-                " SET " + Note.CATEGORY_ID + " = \"" + category.getTitle() +
-                "\" WHERE " + Note.CATEGORY_ID +" = \"" + oldCategoryName + "\"");*/
-        // updating row
         return db.update(Category.TABLE_NAME, values, Category.COLUMN_ID + " = ?",
                 new String[]{String.valueOf(category.getId())});
     }

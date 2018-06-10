@@ -49,6 +49,7 @@ public class CategoriesActivity extends AppCompatActivity {
     //TODO : the to-do(s) from notes on keep
     //TODO : add search engine
     //TODO : add about app page and in it add contact developer by whats for example
+    //TODO : Make keyboard appear when add notes activity opens
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

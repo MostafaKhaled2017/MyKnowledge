@@ -13,17 +13,7 @@
         <activity
             android:name=".activities.NotesActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
-            <!--
-            TODO :
-            <meta-data
-             android:name="android.app.searchable"
-             android:resource="@xml/searchable" />
-
-            <intent-filter>
-              <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".activities.CategoriesActivity">
             <intent-filter>

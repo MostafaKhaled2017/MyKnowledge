@@ -1,12 +1,15 @@
 package com.mk.myknowldge.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,7 +21,7 @@ import com.mk.myknowldge.model.Note;
 public class AddNoteActivity extends AppCompatActivity {
 
     private boolean shouldUpdate;
-    private int position;
+    private int position, id;
     private int categoryId;
     private EditText inputTitle, inputNote;
     private String categoryName;
@@ -31,7 +34,7 @@ public class AddNoteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
         inputTitle = findViewById(R.id.title);
-        inputNote = findViewById(R.id.content);
+        inputNote = findViewById(R.id.description_in_add_notes);
         Intent intent = getIntent();
         if (intent != null) {
             categoryName = intent.getStringExtra("category_name");
@@ -40,9 +43,12 @@ public class AddNoteActivity extends AppCompatActivity {
             position = intent.getIntExtra("position", position);
             title = intent.getStringExtra("title");
             content = intent.getStringExtra("content");
+            id = intent.getIntExtra("id", -1);
             inputTitle.setText(title);
             inputNote.setText(content);
         }
+        inputTitle.setFocusable(true);
+
        /* if(shouldUpdate){
             inputTitle.setEnabled(false);
             inputNote.setEnabled(false);
@@ -69,12 +75,12 @@ public class AddNoteActivity extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             //Back button
-            case R.id.action_save:
+            case R.id.action_save: {
                 if (TextUtils.isEmpty(inputNote.getText().toString()) && TextUtils.isEmpty(inputTitle.getText().toString())) {
                     Toast.makeText(AddNoteActivity.this, "Enter your text!", Toast.LENGTH_SHORT).show();
                     return true;
                 }
-                // check if user updating name
+                Log.v("Logging", "should update is : " + shouldUpdate);
                 if (!shouldUpdate) {
                     // create new title
                     createNote(inputTitle.getText().toString(), inputNote.getText().toString());
@@ -87,7 +93,7 @@ public class AddNoteActivity extends AppCompatActivity {
                 i.putExtra("category_id", categoryId);
                 startActivity(i);
                 return true;
-
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -102,6 +108,7 @@ public class AddNoteActivity extends AppCompatActivity {
         position = intent.getIntExtra("position", position);
         title = intent.getStringExtra("title");
         content = intent.getStringExtra("content");
+        id = intent.getIntExtra("id", -1);
         inputTitle.setText(title);
         inputNote.setText(content);
 
@@ -123,6 +130,7 @@ public class AddNoteActivity extends AppCompatActivity {
         // updating name text
         n.setTitle(title);
         n.setContent(content);
+        n.setId(id);
 
         // updating name in db
         db.updateNote(n);

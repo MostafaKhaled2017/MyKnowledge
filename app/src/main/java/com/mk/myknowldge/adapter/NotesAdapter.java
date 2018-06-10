@@ -24,15 +24,15 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
     private List<Note> notesList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title;
-        public TextView dot;
-        public TextView timestamp;
+        public TextView title, dot, timestamp, description;
+
 
         public MyViewHolder(View view) {
             super(view);
-            title = view.findViewById(R.id.dialog_value);
+            title = view.findViewById(R.id.title_in_list);
             dot = view.findViewById(R.id.dot);
             timestamp = view.findViewById(R.id.timestamp);
+            description = view.findViewById(R.id.description_in_list);
         }
     }
 
@@ -59,6 +59,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.MyViewHolder
         // Displaying dot from HTML character code
         holder.dot.setText(Html.fromHtml("&#8226;"));
 
+        holder.description.setText(note.getContent());
 
         // Formatting and displaying timestamp
         holder.timestamp.setText(formatDate(note.getTimestamp()));

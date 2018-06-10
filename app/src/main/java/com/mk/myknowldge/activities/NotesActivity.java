@@ -1,21 +1,15 @@
 package com.mk.myknowldge.activities;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,7 +17,6 @@ import com.mk.myknowldge.R;
 import com.mk.myknowldge.adapter.NotesAdapter;
 import com.mk.myknowldge.helpers.DatabaseHelper;
 import com.mk.myknowldge.model.Note;
-import com.mk.myknowldge.utils.MyDividerItemDecoration;
 import com.mk.myknowldge.utils.RecyclerTouchListener;
 
 import java.util.ArrayList;
@@ -92,8 +85,6 @@ public class NotesActivity extends AppCompatActivity {
                 mAdapter = new NotesAdapter(this, notesList);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 recyclerView.setLayoutManager(mLayoutManager);
-                recyclerView.setItemAnimator(new DefaultItemAnimator());
-                recyclerView.addItemDecoration(new MyDividerItemDecoration(this, LinearLayoutManager.VERTICAL, 16));
                 recyclerView.setAdapter(mAdapter);
 
 
@@ -127,20 +118,6 @@ public class NotesActivity extends AppCompatActivity {
         this.note = note;
     }
 
-    @Override
-    public boolean onCreateOptionsMenu (Menu menu){
-        // Inflate the menu_add_activity; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_notes_activity, menu);
-
-       /* // Associate searchable configuration with the SearchView
-        SearchManager searchManager =//TODO
-                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getComponentName()));*/
-        return true;
-    }
     /**
      * Deleting name from SQLite and removing the
      * item from the list by its position
@@ -190,6 +167,7 @@ public class NotesActivity extends AppCompatActivity {
         i.putExtra("position", position);
         i.putExtra("title", notesList.get(position).getTitle());
         i.putExtra("content", notesList.get(position).getContent());
+        i.putExtra("id", notesList.get(position).getId());
         startActivity(i);
     }
 
@@ -236,4 +214,16 @@ public class NotesActivity extends AppCompatActivity {
         Intent i = new Intent(NotesActivity.this, CategoriesActivity.class);
         startActivity(i);
     }
+
+    /*@Override
+    protected void onResume() {
+        super.onResume();
+        notesList.clear();
+        notesList.addAll(db.getAllNotes());
+
+        // refreshing the list
+        mAdapter.notifyDataSetChanged();
+
+        toggleEmptyNotes();
+    }*/
 }
