@@ -10,6 +10,7 @@
     <string name="lbl_edit_category_name">Edit Category</string>
     <string name="hint_enter_category">Enter the name here</string>
     <string name="save">Save</string>
+    <string name="search">Search</string>
 
 
 </resources>

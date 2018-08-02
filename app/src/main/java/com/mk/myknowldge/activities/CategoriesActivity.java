@@ -37,6 +37,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     private DatabaseHelper db;
 
+    //TODO : make a dialogu appear when return back from note without saving
     //TODO : use firebase or database on server to store databases of the app (search for that)
     //TODO : before publish add the project to bitBucket as private and remove it from git hub
     //TODO : enhance the design of the app and take ideas from memo app and edit the fab icon design
@@ -47,7 +48,7 @@ public class CategoriesActivity extends AppCompatActivity {
     //TODO : add the time and day to the date
     //TODO : remove unused files (as xml, java, photos, values ...)
     //TODO : the to-do(s) from notes on keep
-    //TODO : add search engine
+    //TODO : add search engine (prefer after update)
     //TODO : add about app page and in it add contact developer by whats for example
     //TODO : Make keyboard appear when add notes activity opens
     @Override
