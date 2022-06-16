@@ -1,4 +1,4 @@
-# Note taking app with android Room liabrary to perfrom
+# Note taking app with android Room library to perfrom
 - Retrieve and display list using recyclerview
 
 ![insert and display list](screenshots/insert.gif?raw=true "insert")
